@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from models import Product, User
 from schemas import UserCreate
-from bcrypt import hashpw, gensalt
+from auth import hash_password, verify_password
 
 def get_user(db: Session, user_id: int):
     return db.query(User).filter(User.id == user_id).first()
@@ -10,12 +10,18 @@ def get_user_by_email(db: Session, email: str):
     return db.query(User).filter(User.email == email).first()
 
 def create_user(db: Session, user: UserCreate):
-    hashed_password = hashpw(user.password.encode('utf-8'), gensalt())
+    hashed_password = hash_password(user.password)
     db_user = User(name=user.name, email=user.email, password=hashed_password)
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
     return db_user
+
+def login_user(db: Session, email: str, password: str):
+    user = get_user_by_email(db, email)
+    if user and verify_password(password, user.password):
+        return user
+    return None
 
 
 def get_product(db: Session, product_id: int):
