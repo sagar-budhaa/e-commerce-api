@@ -33,3 +33,7 @@ class ProductBase(BaseModel):
 
 class ProductCreate(ProductBase):
     pass
+
+
+class CategoryBase(BaseModel):
+    name: str

@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from database import SessionLocal, engine, Base
-from routers import users, products
+from routers import users, products, category
 
 app = FastAPI()
 
@@ -11,6 +11,7 @@ def startup():
 
 app.include_router(users.router)
 app.include_router(products.router)
+app.include_router(category.router)
 
 @app.get("/")
 def read_root():
