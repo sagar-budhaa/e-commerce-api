@@ -13,8 +13,8 @@ class User(Base):
     updated_at: Mapped[DateTime] = mapped_column(DateTime, default=func.now(), onupdate=func.now(), nullable=False)
 
     orders = relationship("Order", back_populates="user")
-    addresses = relationship("address", back_populates="user")
-    carts = relationship("cart", back_populates="user")
+    addresses = relationship("Address", back_populates="user")
+    carts = relationship("Cart", back_populates="user")
 
 class Product(Base):
     __tablename__ = "products"
@@ -27,7 +27,7 @@ class Product(Base):
     updated_at: Mapped[DateTime] = mapped_column(DateTime, default=func.now(), onupdate=func.now(), nullable=False)
 
     orders = relationship("Order", back_populates="product")
-    carts = relationship("cart", back_populates="product")
+    carts = relationship("Cart", back_populates="product")
 
 class Order(Base):
     __tablename__ = "orders"
