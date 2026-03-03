@@ -11,6 +11,7 @@ class User(Base):
     password: Mapped[str] = mapped_column(String, nullable=False)
     created_at: Mapped[DateTime] = mapped_column(DateTime, default=func.now(), nullable=False)
     updated_at: Mapped[DateTime] = mapped_column(DateTime, default=func.now(), onupdate=func.now(), nullable=False)
+    role: Mapped[str] = mapped_column(String, default="customer", nullable=False)
 
     orders = relationship("Order", back_populates="user")
     addresses = relationship("Address", back_populates="user")
