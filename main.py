@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from database import SessionLocal, engine, Base
-from routers import users
+from routers import users, products
 
 app = FastAPI()
 
@@ -10,6 +10,7 @@ def startup():
     Base.metadata.create_all(bind=engine)
 
 app.include_router(users.router)
+app.include_router(products.router)
 
 @app.get("/")
 def read_root():

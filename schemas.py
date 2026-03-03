@@ -24,3 +24,12 @@ class LoginResponse(BaseModel):
     access_token: str
     token_type: str
     user: UserRead
+
+
+class ProductBase(BaseModel):
+    name: str
+    description: str = None
+    price: float
+
+class ProductCreate(ProductBase):
+    pass

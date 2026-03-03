@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
-from models import Product, User
-from schemas import UserCreate
+from models import Product, Role, User
+from schemas import UserCreate, ProductCreate
 from auth import hash_password, verify_password
 
 def get_user(db: Session, user_id: int):
@@ -11,7 +11,7 @@ def get_user_by_email(db: Session, email: str):
 
 def create_user(db: Session, user: UserCreate):
     hashed_password = hash_password(user.password)
-    db_user = User(name=user.name, email=user.email, password=hashed_password)
+    db_user = User(name=user.name, email=user.email, password=hashed_password, role=Role.CUSTOMER)
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
@@ -30,14 +30,14 @@ def get_product(db: Session, product_id: int):
 def get_products(db: Session, skip: int = 0, limit: int = 100):
     return db.query(Product).offset(skip).limit(limit).all()
 
-def create_product(db: Session, product):
+def create_product(db: Session, product: ProductCreate):
     db_product = Product(name=product.name, description=product.description, price=product.price)
     db.add(db_product)
     db.commit()
     db.refresh(db_product)
     return db_product
 
-def update_product(db: Session, product_id: int, product):
+def update_product(db: Session, product_id: int, product: ProductCreate):
     db_product = get_product(db, product_id)
     if db_product is None:
         return None
