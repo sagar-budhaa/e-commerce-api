@@ -15,3 +15,7 @@ app.include_router(users.router)
 def read_root():
     return {"message": "Welcome to the E-commerce API!", "version": "1.0.0"}
 
+
+@app.get("/health")
+def health_check():
+    return {"status": "ok"}
