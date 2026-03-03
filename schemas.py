@@ -37,3 +37,9 @@ class ProductCreate(ProductBase):
 
 class CategoryBase(BaseModel):
     name: str
+
+class OrderBase(BaseModel):
+    user_id: int
+    product_id: int
+    quantity: int
+    total_price: float

@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from models import Category, Product, Role, User
+from models import Category, Order, Product, Role, User
 from schemas import UserCreate, ProductCreate
 from auth import hash_password, verify_password
 
@@ -85,3 +85,24 @@ def delete_category(db: Session, category_id: int):
     db.delete(db_category)
     db.commit()
     return db_category
+
+def get_order(db: Session, order_id: int):
+    return db.query(Order).filter(Order.id == order_id).first()
+
+def get_orders(db: Session, skip: int = 0, limit: int = 100):
+    return db.query(Order).offset(skip).limit(limit).all()
+
+def create_order(db: Session, user_id: int, order: Order):
+    db_order = Order(user_id=user_id, product_id=order.product_id, quantity=order.quantity, total_price=order.total_price)
+    db.add(db_order)
+    db.commit()
+    db.refresh(db_order)
+    return db_order
+
+def delete_order(db: Session, order_id: int):
+    db_order = get_order(db, order_id)
+    if db_order is None:
+        return None
+    db.delete(db_order)
+    db.commit()
+    return db_order
