@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from models import Product, Role, User
+from models import Category, Product, Role, User
 from schemas import UserCreate, ProductCreate
 from auth import hash_password, verify_password
 
@@ -55,3 +55,33 @@ def delete_product(db: Session, product_id: int):
     db.delete(db_product)
     db.commit()
     return db_product
+
+def get_category(db: Session, category_id: int):
+    return db.query(Category).filter(Category.id == category_id).first()
+
+def get_categories(db: Session, skip: int = 0, limit: int = 100):
+    return db.query(Category).offset(skip).limit(limit).all()
+
+def create_category(db: Session, category: Category):
+    db_category = Category(name=category.name)
+    db.add(db_category)
+    db.commit()
+    db.refresh(db_category)
+    return db_category
+
+def update_category(db: Session, category_id: int, category: Category):
+    db_category = get_category(db, category_id)
+    if db_category is None:
+        return None
+    db_category.name = category.name
+    db.commit()
+    db.refresh(db_category)
+    return db_category
+
+def delete_category(db: Session, category_id: int):
+    db_category = get_category(db, category_id)
+    if db_category is None:
+        return None
+    db.delete(db_category)
+    db.commit()
+    return db_category
