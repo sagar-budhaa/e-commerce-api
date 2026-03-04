@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from models import Category, Order, Product, Role, User
+from models import Address, Category, Order, Product, Role, User
 from schemas import UserCreate, ProductCreate
 from auth import hash_password, verify_password
 
@@ -107,3 +107,36 @@ def delete_order(db: Session, order_id: int, user_id: int):
     db.delete(db_order)
     db.commit()
     return db_order
+
+def get_address(db: Session, address_id: int, user_id: int):
+    return db.query(Address).filter(Address.id == address_id, Address.user_id == user_id).first()
+
+def get_addresses(db: Session, user_id: int, skip: int = 0, limit: int = 100):
+    return db.query(Address).filter(Address.user_id == user_id).offset(skip).limit(limit).all()
+
+def create_address(db: Session, address: Address, user_id: int):
+    db_address = Address(user_id=user_id, street=address.street, city=address.city, state=address.state, zip_code=address.zip_code)
+    db.add(db_address)
+    db.commit()
+    db.refresh(db_address)
+    return db_address
+
+def update_address(db: Session, address_id: int, address: Address, user_id: int):
+    db_address = get_address(db, address_id, user_id)
+    if db_address is None:
+        return None
+    db_address.street = address.street
+    db_address.city = address.city
+    db_address.state = address.state
+    db_address.zip_code = address.zip_code
+    db.commit()
+    db.refresh(db_address)
+    return db_address
+
+def delete_address(db: Session, address_id: int, user_id: int):
+    db_address = get_address(db, address_id, user_id)
+    if db_address is None:
+        return None
+    db.delete(db_address)
+    db.commit()
+    return db_address
