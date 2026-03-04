@@ -93,7 +93,8 @@ def get_orders(db: Session, skip: int = 0, limit: int = 100):
     return db.query(Order).offset(skip).limit(limit).all()
 
 def create_order(db: Session, order: Order, user_id: int):
-    db_order = Order(user_id=user_id, product_id=order.product_id, quantity=order.quantity, total_price=order.total_price)
+    total_price = order.quantity * db.query(Product).filter(Product.id == order.product_id).first().price
+    db_order = Order(user_id=user_id, product_id=order.product_id, quantity=order.quantity, total_price=total_price)
     db.add(db_order)
     db.commit()
     db.refresh(db_order)

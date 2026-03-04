@@ -19,6 +19,7 @@ def get_db():
 
 @router.post("/", response_model=schemas.OrderBase)
 def create_order(order: schemas.OrderCreate, current_user: schemas.UserRead = Depends(get_current_user), db: Session = Depends(get_db)):
+    print(current_user)
     user_id = current_user.id
     db_order = crud.create_order(db, order, user_id=user_id)
     return db_order

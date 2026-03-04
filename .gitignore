@@ -5,3 +5,4 @@ __pycache__
 *.pyc
 ./ecommerce.db
 ecommerce.db
+/ecommerce.db

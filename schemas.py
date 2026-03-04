@@ -41,4 +41,7 @@ class CategoryBase(BaseModel):
 class OrderBase(BaseModel):
     product_id: int
     quantity: int
-    total_price: float
+    total_price: float | None = None
+
+class OrderCreate(OrderBase):
+    pass

@@ -30,9 +30,12 @@ def create_access_token(data: dict, expires_delta: timedelta = None):
 def decode_access_token(token: str):
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        user_id: int = payload.get("sub")
+        print(f"Full payload: {payload}")
+        user_id = payload.get("sub")
+        print(f"sub value: {user_id}, type: {type(user_id)}")
         if user_id is None:
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
+            raise HTTPException(status_code=401, detail="Invalid token")
         return int(user_id)
-    except JWTError:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
+    except JWTError as e:
+        print(f"JWTError: {e}")
+        raise HTTPException(status_code=401, detail="Invalid token")
